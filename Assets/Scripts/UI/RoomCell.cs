@@ -17,15 +17,15 @@ public class RoomCell : MonoBehaviour
         
     }
     public void Select() {
-        if(menuManager.CurrentRoom != null)
-            menuManager.CurrentRoom.Deselect();
-        if(menuManager.CurrentRoom == this) {
+        if(menuManager.currentRoom != null)
+            menuManager.currentRoom.Deselect();
+        if(menuManager.currentRoom == this) {
             Deselect();
-            menuManager.CurrentRoom = null;
+            menuManager.currentRoom = null;
 
         } else {
             GetComponent<Image>().color = new Color(0.04f, 0.52f, 0.89f);
-            menuManager.CurrentRoom = this;
+            menuManager.currentRoom = this;
         }
         menuManager.ValidadeInputs();
 

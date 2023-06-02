@@ -30,8 +30,11 @@ public class ButtonBehaviour : MonoBehaviour
     }
     public void Disable() {
         GetComponent<Animator>().SetBool("Disabled", true);
+        isEnabled = false;
+
     }
     public void Enable() {
         GetComponent<Animator>().SetBool("Disabled", false);
+        isEnabled = true;
     }
 }

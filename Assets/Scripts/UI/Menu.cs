@@ -7,7 +7,8 @@ public class Menu : MonoBehaviour
     private string playerName = "";
     private string roomCode = "";
     public ButtonBehaviour joinButton, createButton;
-    public RoomCell CurrentRoom;
+    public RoomCell currentRoom;
+    public Animator dialog;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,9 @@ public class Menu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            CloseDialog();
+        }
     }
     public void getPlayerName(string playerName) {
         this.playerName = playerName;
@@ -34,7 +37,7 @@ public class Menu : MonoBehaviour
             joinButton.Disable();
         } else {
             createButton.Enable();
-            if(roomCode.Length != 6 && CurrentRoom == null) {
+            if(roomCode.Length != 6 && currentRoom == null) {
                 joinButton.Disable();
             } else {
                 joinButton.Enable();
@@ -44,12 +47,17 @@ public class Menu : MonoBehaviour
     }
     public void CreateRoom() {
         if(createButton.isEnabled) {
-            //code
+            dialog.SetBool("Open", true);
+            DialogManager.manager.SetInitialValues(playerName + "'s Room");
         }
     }
     public void JoinRoom() {
         if(joinButton.isEnabled) {
             //code
         }
+    }
+    public void CloseDialog() {
+        dialog.SetBool("Open", false);
+
     }
 }
