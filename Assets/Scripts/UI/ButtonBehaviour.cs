@@ -14,7 +14,7 @@ public class ButtonBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     public void Hover() {
         GetComponent<Animator>().SetBool("Hover", true);
@@ -27,5 +27,11 @@ public class ButtonBehaviour : MonoBehaviour
     }
     public void CancelPress() {
         GetComponent<Animator>().SetBool("Press", false);
+    }
+    public void Disable() {
+        GetComponent<Animator>().SetBool("Disabled", true);
+    }
+    public void Enable() {
+        GetComponent<Animator>().SetBool("Disabled", false);
     }
 }
