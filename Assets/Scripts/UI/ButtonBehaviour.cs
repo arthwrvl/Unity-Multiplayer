@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ButtonBehaviour : MonoBehaviour
 {
-
+    public bool isEnabled;
     // Start is called before the first frame update
     void Start()
     {
