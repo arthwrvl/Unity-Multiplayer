@@ -48,12 +48,12 @@ public class Menu : MonoBehaviour
     public void CreateRoom() {
         if(createButton.isEnabled) {
             dialog.SetBool("Open", true);
-            DialogManager.manager.SetInitialValues(playerName + "'s Room");
+            DialogManager.manager.SetInitialValues(playerName, playerName + "'s Room");
         }
     }
     public void JoinRoom() {
         if(joinButton.isEnabled) {
-            //code
+            LobbyManager.manager.JoinRoom(playerName, roomCode, currentRoom ? currentRoom.GetLobbyId() : "");
         }
     }
     public void CloseDialog() {

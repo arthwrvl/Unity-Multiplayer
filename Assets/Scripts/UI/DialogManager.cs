@@ -12,14 +12,16 @@ public class DialogManager : MonoBehaviour
     private string playersValue;
     [SerializeField]
     private TMP_InputField nameField, playersField;
+    private string playerName;
     private void OnEnable() {
         if(DialogManager.manager == null) {
             DialogManager.manager = this;
         } else {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
-    public void SetInitialValues(string RoomName, int maxPlayers = 10) {
+    public void SetInitialValues(string playerName, string RoomName, int maxPlayers = 10) {
+        this.playerName = playerName;
         nameValue = RoomName;
         playersValue = maxPlayers.ToString();
         nameField.text = nameValue;
@@ -32,7 +34,10 @@ public class DialogManager : MonoBehaviour
         playersValue = value;
     }
     public void CreateRoom() {
-        //Implement Logic
+        if(nameValue != "" && playersValue != "") {
+            LobbyManager.manager.CreateRoom(playerName, nameValue, int.Parse(playersValue));
+            GetComponent<Animator>().SetBool("Open", false);
+        }
     }
 
 }
