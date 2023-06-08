@@ -12,7 +12,9 @@ public class AuthenticationManager : MonoBehaviour
         if(AuthenticationManager.manager == null) {
             AuthenticationManager.manager = this;
         } else {
-            Destroy(this);
+            if(AuthenticationManager.manager != this) {
+                Destroy(this);
+            }
         }
     }
     // Start is called before the first frame update
@@ -34,5 +36,8 @@ public class AuthenticationManager : MonoBehaviour
     }
     public bool IsLogged() {
         return AuthenticationService.Instance.IsSignedIn;
+    }
+    public string GetPlayerId() {
+        return AuthenticationService.Instance.PlayerId;
     }
 }

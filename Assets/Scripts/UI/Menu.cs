@@ -61,4 +61,12 @@ public class Menu : MonoBehaviour
         dialog.SetBool("Open", false);
 
     }
+
+    public void StartHost() {
+        NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.SceneManager.LoadScene("CharacterSelect", LoadSceneMode.Single);
+    }
+    public void StartClient() {
+        NetworkManager.Singleton.StartClient();
+    }
 }

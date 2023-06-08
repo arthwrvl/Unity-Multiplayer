@@ -4,7 +4,7 @@ using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
-
+using System.Threading.Tasks;
 public class LobbyManager : MonoBehaviour {
     public static LobbyManager manager;
     [SerializeField]
@@ -17,6 +17,8 @@ public class LobbyManager : MonoBehaviour {
     [SerializeField]
     private GameObject noRoom;
     private Lobby hostRoom, joinedRoom;
+
+    private float pollTimer = 1.1f;
     private void OnEnable() {
         if(LobbyManager.manager == null) {
             LobbyManager.manager = this;
@@ -28,6 +30,9 @@ public class LobbyManager : MonoBehaviour {
     async void Start() {
         await UnityServices.InitializeAsync();
         StartCoroutine(SearchRooms());
+    }
+    void Update() {
+        RoomPoll();
     }
     IEnumerator SearchRooms() {
         //Search for Avaliable Rooms every 10 sec
@@ -118,12 +123,55 @@ public class LobbyManager : MonoBehaviour {
         };
         return player;
     }
+    public async void LeaveRoom() {
+        try {
+            await LobbyService.Instance.RemovePlayerAsync(joinedRoom.Id, AuthenticationManager.manager.GetPlayerId());
+
+        } catch ( LobbyServiceException e){
+            Debug.Log(e);
+        }
+    }
+    private async void RemovePlayer(int playerIndex) {
+        try {
+            if(joinedRoom == hostRoom) {
+                await LobbyService.Instance.RemovePlayerAsync(joinedRoom.Id, joinedRoom.Players[playerIndex].Id);
+            }
+        } catch (LobbyServiceException e) {
+            Debug.Log(e);
+        }
+    }
+    private async void MigrateHost(int playerIndex) {
+        try {
+            hostRoom = await Lobbies.Instance.UpdateLobbyAsync(hostRoom.Id, new UpdateLobbyOptions {
+                HostId = joinedRoom.Players[playerIndex].Id,
+            });
+            joinedRoom = hostRoom;
+        } catch (LobbyServiceException e) {
+            Debug.Log(e);
+        }
+    }
     IEnumerator SendHeartbeat() {
         //send heartbeat every 15sec to keep room avaliable
         while(true) {
             LobbyService.Instance.SendHeartbeatPingAsync(hostRoom.Id);
             yield return new WaitForSecondsRealtime(15);
         }
+    }
+    private async void RoomPoll() {
+        if(joinedRoom != null) {
+            pollTimer -= Time.deltaTime;
+            if(pollTimer <= 0) {
+                pollTimer = 1.1f;
+                try {
+                    Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedRoom.Id);
+                    joinedRoom = lobby;
+                } catch(LobbyServiceException e) {
+                    Debug.Log(e);
+                }
+            }
+
+        }
+
     }
 
 }
