@@ -5,6 +5,9 @@ using UnityEngine;
 public class ButtonBehaviour : MonoBehaviour
 {
     public bool isEnabled;
+    [SerializeField]
+    private bool isSelectable = false;
+    private bool selected = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,16 +20,26 @@ public class ButtonBehaviour : MonoBehaviour
 
     }
     public void Hover() {
-        GetComponent<Animator>().SetBool("Hover", true);
+        if(!selected)
+            GetComponent<Animator>().SetBool("Hover", true);
     }
     public void Release() {
-        GetComponent<Animator>().SetBool("Hover", false);
+        if(!selected)
+            GetComponent<Animator>().SetBool("Hover", false);
     }
     public void Press() {
-        GetComponent<Animator>().SetBool("Press", true);
+        if(!isSelectable) {
+            GetComponent<Animator>().SetBool("Press", true);
+        } else {
+            GetComponent<Animator>().SetBool("Selected", !selected);
+            selected = !selected;
+        }
+
+
     }
     public void CancelPress() {
-        GetComponent<Animator>().SetBool("Press", false);
+        if(!selected)
+            GetComponent<Animator>().SetBool("Press", false);
     }
     public void Disable() {
         GetComponent<Animator>().SetBool("Disabled", true);
