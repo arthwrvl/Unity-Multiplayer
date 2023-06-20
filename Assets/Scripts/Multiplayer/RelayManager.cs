@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using Unity.Netcode;
@@ -16,7 +17,7 @@ public class RelayManager : MonoBehaviour {
     void Update() {
 
     }
-    public async void CreateRelay(int maxPlayers) {
+    public async Task<string> CreateRelay(int maxPlayers) {
         try {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
@@ -29,10 +30,12 @@ public class RelayManager : MonoBehaviour {
                 allocation.ConnectionData
             );
             NetworkManager.Singleton.StartHost();
-
+            return joinCode;
         } catch(RelayServiceException e) {
             Debug.Log(e);
+            return null;
         }
+        
     }
 
     public async void JoinRelay(string joinCode) {
